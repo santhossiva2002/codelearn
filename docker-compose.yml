@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+    restart: unless-stopped
+
+  # Code execution service for JavaScript
+  js-executor:
+    build: 
+      context: .
+      dockerfile: executors/javascript.Dockerfile
+    volumes:
+      - ./temp:/code
+    restart: unless-stopped
+
+  # Code execution service for Python
+  python-executor:
+    build:
+      context: .
+      dockerfile: executors/python.Dockerfile
+    volumes:
+      - ./temp:/code
+    restart: unless-stopped
+
+  # Code execution service for Java
+  java-executor:
+    build:
+      context: .
+      dockerfile: executors/java.Dockerfile
+    volumes:
+      - ./temp:/code
+    restart: unless-stopped
